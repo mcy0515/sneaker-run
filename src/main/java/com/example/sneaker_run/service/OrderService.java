@@ -26,7 +26,7 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException("유저가 없습니다."));
 
         // 2. 상품 조회
-        Product product = productRepository.findById(request.productId())
+        Product product = productRepository.findByIdWithPessimisticLock(request.productId())
                 .orElseThrow(() -> new IllegalArgumentException("상품이 없습니다."));
 
         // 3. 재고 감소 (여기서 수량 부족하면 에러 터짐)
