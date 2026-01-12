@@ -13,3 +13,8 @@ spring:
       hibernate:
         format_sql: true    # ??? SQL? ??? ???
         show_sql: true      # ???? SQL? ??? ??
+
+  data:
+    redis:
+      host: localhost
+      port: 6379

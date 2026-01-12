@@ -6,6 +6,7 @@ import com.example.sneaker_run.domain.User;
 import com.example.sneaker_run.dto.OrderRequest;
 import com.example.sneaker_run.repository.OrderRepository;
 import com.example.sneaker_run.repository.ProductRepository;
+import com.example.sneaker_run.repository.RedisStockRepository;
 import com.example.sneaker_run.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,9 @@ class OrderServiceTest {
     @Autowired UserRepository userRepository;
     @Autowired OrderRepository orderRepository;
 
+    @Autowired
+    RedisStockRepository redisStockRepository;
+
     @Test
     @DisplayName("동시에 100명이 주문하면 재고는 0이 되어야 한다.")
     void concurrencyTest() throws InterruptedException {
@@ -33,6 +37,8 @@ class OrderServiceTest {
         // 1. 테스트 데이터 준비
         User user = userRepository.save(new User("test@test.com", "테스터"));
         Product product = productRepository.save(new Product("나이키 한정판", 100000L, 100L, "설명"));
+
+        redisStockRepository.setStock(product.getId(), 100L);
 
         int threadCount = 100;
         ExecutorService executorService = Executors.newFixedThreadPool(32);
@@ -51,7 +57,7 @@ class OrderServiceTest {
 
         latch.await();
 
-        Product findProduct = productRepository.findById(product.getId()).orElseThrow();
-        assertEquals(0, findProduct.getStockQuantity());
+        Long stock = redisStockRepository.getStock(product.getId());
+        assertEquals(0, stock);
     }
 }
