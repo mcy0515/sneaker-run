@@ -27,7 +27,6 @@
 <br>
 
 ## 3. 아키텍처 (Architecture)
-
 <img width="734" height="654" alt="architecture" src="https://github.com/user-attachments/assets/321cce6e-8454-4a5a-8198-c92ea6fba68b" />
 
 <br>
